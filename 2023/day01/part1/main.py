@@ -1,21 +1,11 @@
 def calibrate(values: str) -> int:
-    value = 0
+    total_value = 0
 
     for line in values.split('\n'):
-        ones_digit = -1
-        tens_digit = -1
+        digits = [int(c) for c in line if c.isdigit()]
+        total_value += digits[0] * 10 + digits[-1]
 
-        for c in line:
-            if c.isdigit():
-                n = int(c)
-                ones_digit = n
-
-                if tens_digit == -1:
-                    tens_digit = n
-
-        value += tens_digit * 10 + ones_digit
-
-    return value
+    return total_value
 
 
 if __name__ == '__main__':
