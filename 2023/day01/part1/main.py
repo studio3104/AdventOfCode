@@ -21,5 +21,5 @@ def calibrate(values: str) -> int:
 if __name__ == '__main__':
     import os
 
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'input.txt')) as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../input.txt')) as f:
         print(calibrate(f.read()))
