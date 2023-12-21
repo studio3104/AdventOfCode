@@ -1,8 +1,8 @@
-def get_position_of_most_left_digit(position: tuple[int, int], schematic: list[list[str]]) -> tuple[int, int]:
+def find_leftmost_digit_position(position: tuple[int, int], schematic: list[list[str]]) -> tuple[int, int]:
     _next = (position[0], position[1] - 1)
     if _next[1] < 0 or not schematic[_next[0]][_next[1]].isdigit():
         return position
-    return get_position_of_most_left_digit(_next, schematic)
+    return find_leftmost_digit_position(_next, schematic)
 
 
 def _fetch_part_id(position: tuple[int, int], schematic: list[list[str]], checked: set[tuple[int, int]], _id: int = 0) -> int:
@@ -24,7 +24,7 @@ def fetch_part_id(position: tuple[int, int], schematic: list[list[str]], checked
     ):
         return 0
 
-    p = get_position_of_most_left_digit(position, schematic)
+    p = find_leftmost_digit_position(position, schematic)
     return _fetch_part_id(p, schematic, checked)
 
 
