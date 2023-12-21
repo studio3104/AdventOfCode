@@ -1,31 +1,29 @@
 def find_leftmost_digit_position(position: tuple[int, int], schematic: list[list[str]]) -> tuple[int, int]:
-    _next = (position[0], position[1] - 1)
-    if _next[1] < 0 or not schematic[_next[0]][_next[1]].isdigit():
-        return position
-    return find_leftmost_digit_position(_next, schematic)
-
-
-def _fetch_part_id(position: tuple[int, int], schematic: list[list[str]], checked: set[tuple[int, int]], _id: int = 0) -> int:
-    if position[1] >= len(schematic[0]) or not schematic[position[0]][position[1]].isdigit():
-        return _id
-    checked.add(position)
-    current = _id * 10 + int(schematic[position[0]][position[1]])
-    return _fetch_part_id((position[0], position[1] + 1), schematic, checked, current)
+    x, y = position
+    while y > 0 and schematic[x][y - 1].isdigit():
+        y -= 1
+    return x, y
 
 
 def fetch_part_id(position: tuple[int, int], schematic: list[list[str]], checked: set[tuple[int, int]]) -> int:
     if (
             position in checked or
-            position[0] < 0 or
-            position[1] < 0 or
-            position[0] >= len(schematic) or
-            position[1] >= len(schematic[0]) or
+            not (0 <= position[0] < len(schematic)) or
+            not (0 <= position[1] < len(schematic[0])) or
             not schematic[position[0]][position[1]].isdigit()
     ):
         return 0
 
-    p = find_leftmost_digit_position(position, schematic)
-    return _fetch_part_id(p, schematic, checked)
+    leftmost_position = find_leftmost_digit_position(position, schematic)
+    x, y = leftmost_position
+    part_id = 0
+
+    while y < len(schematic[0]) and schematic[x][y].isdigit():
+        part_id = part_id * 10 + int(schematic[x][y])
+        checked.add((x, y))
+        y += 1
+
+    return part_id
 
 
 def _find_parts_and_sum_ids(schematic: list[list[str]]) -> int:
@@ -37,14 +35,9 @@ def _find_parts_and_sum_ids(schematic: list[list[str]]) -> int:
             if segment.isdigit() or segment == '.':
                 continue
 
-            total += fetch_part_id((i - 1, j - 1), schematic, checked)
-            total += fetch_part_id((i - 1, j), schematic, checked)
-            total += fetch_part_id((i - 1, j + 1), schematic, checked)
-            total += fetch_part_id((i, j - 1), schematic, checked)
-            total += fetch_part_id((i, j + 1), schematic, checked)
-            total += fetch_part_id((i + 1, j - 1), schematic, checked)
-            total += fetch_part_id((i + 1, j), schematic, checked)
-            total += fetch_part_id((i + 1, j + 1), schematic, checked)
+            adjacent_positions = [(i + dx, j + dy) for dx in [-1, 0, 1] for dy in [-1, 0, 1] if not (dx == 0 and dy == 0)]
+            for pos in adjacent_positions:
+                total += fetch_part_id(pos, schematic, checked)
 
     return total
 
