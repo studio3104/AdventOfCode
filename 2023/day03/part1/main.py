@@ -26,6 +26,10 @@ def fetch_part_id(position: tuple[int, int], schematic: list[list[str]], checked
     return part_id
 
 
+def get_adjacent_positions(i: int, j: int) -> list[tuple[int, int]]:
+    return [(i + dx, j + dy) for dx in [-1, 0, 1] for dy in [-1, 0, 1] if not (dx == 0 and dy == 0)]
+
+
 def _find_parts_and_sum_ids(schematic: list[list[str]]) -> int:
     total = 0
     checked = set()
@@ -35,8 +39,7 @@ def _find_parts_and_sum_ids(schematic: list[list[str]]) -> int:
             if segment.isdigit() or segment == '.':
                 continue
 
-            adjacent_positions = [(i + dx, j + dy) for dx in [-1, 0, 1] for dy in [-1, 0, 1] if not (dx == 0 and dy == 0)]
-            for pos in adjacent_positions:
+            for pos in get_adjacent_positions(i, j):
                 total += fetch_part_id(pos, schematic, checked)
 
     return total
