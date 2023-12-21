@@ -21,5 +21,5 @@ from .main import find_parts_and_sum_ids
                 4361,
         ),
 ))
-def test_sum_possible_game_id_nums(schematic: str, expected: int):
+def test_find_parts_and_sum_ids(schematic: str, expected: int):
     assert find_parts_and_sum_ids(schematic) == expected
